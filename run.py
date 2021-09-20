@@ -57,7 +57,7 @@ def update_worksheet(data, worksheet):
     """
     update relevant worksheet with data calculated basded on sales input
     """
-    print(f"Updateing {worksheet} worksheet...")
+    print(f"Updating {worksheet} worksheet...")
     worksheet_to_update = SHEET.worksheet(worksheet)
     worksheet_to_update.append_row(data)
     print(f"{worksheet} worksheet updated successfully\n")
@@ -95,7 +95,21 @@ def get_last_5_entries_sales():
         columns.append(column[-5:])
 
     return columns
-    
+
+
+def calculate_stock_data(data):
+    """
+    calculate recommended stock based on average + 10%
+    """
+    print("Calculating recommended stock average for each item...")
+    new_stock_data = []
+    for column in data:
+        int_column =[int(num) for num in column]
+        average = sum(int_column) / len(int_column)
+        stock_num = average * 1.1
+        new_stock_data.append(round(stock_num))
+    return new_stock_data
+
 
 def main():
     """
@@ -106,8 +120,10 @@ def main():
     update_worksheet(sales_data, "sales")
     new_surplus_data = calculate_surplus_data(sales_data)
     update_worksheet(new_surplus_data, "surplus")
+    sales_columns = get_last_5_entries_sales()
+    stock_data = calculate_stock_data(sales_columns)
+    update_worksheet(stock_data,"stock")
     
 
 print("Welcome to love sandviches data automation")
-# main()
-sales_columns = get_last_5_entries_sales()
+main()
